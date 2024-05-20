@@ -2,17 +2,16 @@
 
 __global__ void vectordot(int count, int* a, int* b, int *c) {
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
-  int start = idx;
-  if (start < count) {
-    c[start] = a[start] * b[start];
-    start += idx;
+  while (idx < count) {
+    c[idx] = a[idx] * b[idx];
+    idx += gridDim.x * blockDim.x;
   }
 }
 
 int main() {
   const int arr_len = 100000;
   const int block_dim = 32;
-  const int grid_dim = (arr_len + block_dim - 1) / block_dim;
+  const int grid_dim = 16;
   int* a = new int[arr_len];
   int* b = new int[arr_len];
   for (int i = 0; i < arr_len; ++i) {
