@@ -30,7 +30,7 @@ __global__ void reduce(float* input, float* output, int size) {
   int offset = blockIdx.x * blockDim.x + threadIdx.x;
   float val = offset < size ? input[offset] : 0.0;
   val = block_reduce(val);
-  output[blockIdx.x] = val;
+  if(threadIdx.x == 0) output[blockIdx.x] = val;
 }
 
 int main() {
